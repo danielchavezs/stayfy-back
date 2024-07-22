@@ -2,11 +2,11 @@ require("dotenv").config();
 const { Sequelize } = require("sequelize");
 const fs = require('fs');
 const path = require('path');
-const {DATABASE_URL}  = process.env;
+const { DB_USER, DB_PASSWORD, DB_HOST, DB_URL } = process.env;
 
 const defineBooks = require ('./models/Book'); 
 
-const sequelize = new Sequelize(`${DATABASE_URL}`, {
+const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/books`, {
  logging: false, 
  native: false, 
 });
@@ -55,7 +55,7 @@ const createDefaultAdminUser = async () => {
   if (created) {
     console.log('Usuario administrador por defecto creado.');
   } else {
-    console.log('El usuario administrador ya existe.😎');
+    console.log('El usuario administrador ya existe.');
   }
 };
 

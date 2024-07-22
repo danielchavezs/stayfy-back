@@ -2,24 +2,25 @@ const axios = require('axios');
 require('dotenv').config();
 const { API_URL } = process.env;
 const { Book } = require('../../db.js');
-const { filterByTitle } = require('../filters.js/filterByTitle');
-const { filterByGenre } = require('../filters.js/filterByGenre');
-const { sortByDate } = require('../filters.js/sortByDate');
-const { sortBooks } = require('../filters.js/sortBooks');
-const { filterByAuthor } = require('../filters.js/filterByAuthor');
-const { filterByPublisher } = require('../filters.js/filterByPublisher');
-const { filterByRating } = require('../filters.js/filterByRating');
-const { activeFilter } = require('../filters.js/activeFilter');
+const { filterByTitle } = require('../filters/filterByTitle.js');
+const { filterByGenre } = require('../filters/filterByGenre.js');
+const { sortByDate } = require('../filters/sortByDate.js');
+const { sortBooks } = require('../filters/sortBooks.js');
+const { filterByAuthor } = require('../filters/filterByAuthor.js');
+const { filterByPublisher } = require('../filters/filterByPublisher.js');
+const { filterByRating } = require('../filters/filterByRating.js');
+const { activeFilter } = require('../filters/activeFilter.js');
 const { DEFAULT_IMAGE } = require('../../utils');
 
 const createBooks = async () => {
 
-  const response = await fetch(`${API_URL}`)
-  const data = await response.json()
+  const apiRequest = axios.get(API_URL);
+  const responses = await Promise.all([apiRequest]);
   const dbBooks = await Book.findAll();
 
   if (dbBooks.length < 1) {
-      data.books.forEach(async (book) => {
+    for (const response of responses) {
+      response.data.forEach(async (book) => {
         await Book.create({
           id: book.id,
           title: book.title,
@@ -30,6 +31,9 @@ const createBooks = async () => {
           pageCount: book.pageCount,
           genre: book.gender,
           price: Math.ceil(book.price),
+          // arsPrice: Math.ceil(book.price * 843),
+          // copPrice: Math.ceil(book.price * 4200),
+          // mxnPrice: Math.ceil(book.price * 18),
           description: book.description,
           rating: Math.round(Math.random() * (5 - 2) + 2),
           stock: Math.round(Math.random () * (100 - 0) + 0),
@@ -37,6 +41,7 @@ const createBooks = async () => {
       });
     };
   };
+};
 
 const getBooks = async () => {
   const dbBooks = await Book.findAll();
