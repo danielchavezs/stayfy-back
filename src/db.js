@@ -2,14 +2,24 @@ require("dotenv").config();
 const { Sequelize } = require("sequelize");
 const fs = require('fs');
 const path = require('path');
-const { DB_USER, DB_PASSWORD, DB_HOST, DB_URL } = process.env;
+const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_URL } = process.env;
 
 const defineBooks = require ('./models/Book'); 
 
-const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/books`, {
+const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`, {
  logging: false, 
  native: false, 
 });
+
+sequelize.authenticate()
+  .then(() => {
+    console.log('Connection with database has been established successfully.');
+    // console.log(VAR_2)
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
+
 const basename = path.basename(__filename);
 
 const modelDefiners = [];

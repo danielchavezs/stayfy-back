@@ -1,12 +1,9 @@
 const server = require("./src/server");
-const { conn, createDefaultAdminUser } = require('./src/db.js');
+const { conn } = require('./src/db.js');
 const http = require('http');
-const { createBooks } = require("./src/controllers/books/getBooksController.js");
 const PORT = process.env.PORT || 3001;
 
 conn.sync({ alter: true }).then( async () => {
-  await createBooks();
-  await createDefaultAdminUser();
   const httpServer = http.createServer(server);
   httpServer.timeout = 300000;
 

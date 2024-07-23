@@ -13,7 +13,7 @@ const { activeFilter } = require('../filters/activeFilter.js');
 const { DEFAULT_IMAGE } = require('../../utils');
 
 const createBooks = async () => {
-
+  console.log(API_URL)
   const apiRequest = axios.get(API_URL);
   const responses = await Promise.all([apiRequest]);
   const dbBooks = await Book.findAll();
